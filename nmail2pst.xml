@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:mailMover source="Notes" target="PST" language="en"
+	xmlns:tns="http://www.gssnet.com/nsf2pst"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.gssnet.com/nsf2pst nsf2pst.xsd ">
+
+	<!-- Global configuration settings -->
+	<!--
+		<configEntry setting="Server" value="testsrv7/Infosana" />
+	-->
+	<configEntry setting="Server" value="Local" />
+
+	<configEntry setting="BaseDN" value="O=Infosana" />
+	<configEntry setting="Filter" value="Chaliapinas*" />
+	<!--
+		<configEntry setting="IDFile" value="C:/Program Files/lotus/Domino/data/admin.id" />
+	-->
+	<configEntry setting="IDFile"
+		value="D:/Lotus/DominoHQ/Data/admin.id" />
+	<configEntry setting="NotesIni" value="" />
+	<configEntry setting="InputDir" value="d:/temp/nsf2pst_input" />
+	<configEntry setting="OutputDir" value="d:/temp/nsf2pst_output" />
+	<configEntry setting="LogDir" value="d:/temp/nsf2pst" />
+
+	<!-- PST Mask definition -->
+	<pstMask>
+		<pstMaskItem name="LastName" />
+		<pstMaskItem name="SeparatorUnderline" />
+		<pstMaskItem name="FirstName" />
+		<pstMaskItem name="SeparatorUnderline" />
+		<pstMaskItem name="Server" />
+		<pstMaskItem name="SeparatorUnderline" />
+		<pstMaskItem name="Domain" />
+		<pstMaskItem name="SeparatorUnderline" />
+		<pstMaskItem name="PurchaseOrderOrJobNumber" value="20070601" />
+	</pstMask>
+
+	<!-- Mailbox processing rules -->
+	<mailbox>
+		<!--
+		<folders value="Inbox" language="en" />
+		-->
+		<!--
+			<folders value="Inbox,Sent,Junk Mail,Trash,Folders/My Test Folder" language="en"/>
+			<folders value="TBD Folders Names" language="fr"/>
+		-->
+		<!-- For correct ignored values please consult ($FolderAllInfo) view -->
+		<folders value="All" language="en" ignore="Alarms,(Group Calendars)|Group Calendars">
+			<conversionRule>
+				<!-- Trash and JunkMail folders are retrieved via  standard ($FolderAllInfo) view -->
+				<conversion input="Trash" output="Deleted Items"/>
+				<conversion input="JunkMail" output="Junk E-mail"/>
+				<!-- ($Drafts) and ($Sent) views need additional handling -->
+				<conversion input="($Drafts)" output="Drafts"/>
+				<conversion input="($Sent)" output="Sent Items"/>
+				<default output="unknown"/>
+			</conversionRule>
+		</folders>
+
+		<!-- Message formatting/conversion rules -->
+		<message>
+			<messageItem name="PR_MESSAGE_CLASS" value="IPM.Note">
+			</messageItem>
+			<!-- 1 is MSGFLAG_READ -->
+			<messageItem name="PR_MESSAGE_FLAGS" value="1" numeric="true">
+			</messageItem>
+
+			<!-- PR_SENDER_ENTRYID will be set internally -->
+			<messageItem name="PR_SENDER_NAME" value="{From}" condition="Sender">
+				<lotusDocField name="From" placeholder="{From}" />
+			</messageItem>
+			<messageItem name="PR_SENDER_EMAIL_ADDRESS" value="{From}" condition="Sender">
+				<lotusDocField name="From" placeholder="{From}" />
+			</messageItem>
+			<messageItem name="PR_SENDER_ADDRTYPE" value="SMTP" condition="Sender">
+			</messageItem>
+
+			<!-- PR_SENT_REPRESENTING_ENTRYID will be set internally -->
+			<messageItem name="PR_SENT_REPRESENTING_NAME" value="{From}" condition="Sender">
+				<lotusDocField name="From" placeholder="{From}" />
+			</messageItem>
+			<messageItem name="PR_SENT_REPRESENTING_EMAIL_ADDRESS" value="{From}" condition="Sender">
+				<lotusDocField name="From" placeholder="{From}" />
+			</messageItem>
+			<messageItem name="PR_SENT_REPRESENTING_ADDRTYPE" value="SMTP" condition="Sender">
+			</messageItem>
+
+			<messageItem name="PR_IMPORTANCE" value="{Importance}">
+				<lotusDocField name="Importance" placeholder="{Importance}" />
+			</messageItem>
+			
+			<messageItem name="PR_CLIENT_SUBMIT_TIME" value="{PostedDate}">
+				<lotusDocField name="PostedDate" placeholder="{PostedDate}" />
+			</messageItem>
+			
+			<messageItem name="PR_MESSAGE_DELIVERY_TIME" value="{DeliveredDate}">
+				<lotusDocField name="DeliveredDate" placeholder="{DeliveredDate}" />
+			</messageItem>
+			
+			<!-- PR_RECIPIENT_TYPE will be set internally-->
+			<messageItem name="PR_DISPLAY_NAME" value="{To}" condition="RecipientTo">
+				<lotusDocField name="SendTo" placeholder="{To}" />
+			</messageItem>
+			<!-- PR_RECIPIENT_TYPE will be set internally-->
+			<messageItem name="PR_DISPLAY_NAME" value="{Cc}" condition="RecipientCc">
+				<lotusDocField name="CopyTo" placeholder="{Cc}" />
+			</messageItem>
+			<!-- PR_RECIPIENT_TYPE will be set internally-->
+			<messageItem name="PR_DISPLAY_NAME" value="{Bcc}" condition="RecipientBcc">
+				<lotusDocField name="BlindCopyTo" placeholder="{Bcc}" />
+			</messageItem>
+
+			<messageItem name="PR_SUBJECT" value="{Subject}">
+				<lotusDocField name="Subject" placeholder="{Subject}" />
+			</messageItem>
+
+			<messageItem name="PR_BODY" value="{Body}" condition="TextPart">
+				<lotusDocField name="Body" placeholder="{Body}" />
+			</messageItem>
+
+			<!-- 1 is ATTACH_BY_VALUE -->
+			<messageItem name="PR_ATTACH_METHOD" value="1" numeric="true" condition="AttachmentPart">
+			</messageItem>
+			<messageItem name="PR_ATTACH_FILENAME" value="{Filename}" condition="AttachmentPart">
+				<lotusDocField name="$FILE_NAME" placeholder="{Filename}" />
+			</messageItem>
+			<messageItem name="PR_ATTACH_LONG_FILENAME" value="{Filename}" condition="AttachmentPart">
+				<lotusDocField name="$FILE_NAME" placeholder="{Filename}" />
+			</messageItem>
+		</message>
+	</mailbox>
+</tns:mailMover>

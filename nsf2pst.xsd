@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.gssnet.com/nsf2pst"
+	xmlns:tns="http://www.gssnet.com/nsf2pst" version="1.1.3.0">
+
+	<simpleType name="sourceType">
+		<restriction base="string">
+			<enumeration value="Notes"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="targetType">
+		<restriction base="string">
+			<enumeration value="PST"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="languageType">
+		<restriction base="ID">
+			<enumeration value="en"></enumeration>
+			<enumeration value="fr"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="settingType">
+		<restriction base="ID">
+			<enumeration value="Local"></enumeration>
+			<enumeration value="Server"></enumeration>
+			<enumeration value="BaseDN"></enumeration>
+			<enumeration value="Filter"></enumeration>
+			<enumeration value="ContainerDN"></enumeration>
+			<enumeration value="GroupsContainerDN"></enumeration>
+			<enumeration value="IDFile"></enumeration>
+			<enumeration value="IDFilePassword"></enumeration>
+			<enumeration value="NotesIni"></enumeration>
+			<enumeration value="MailHost"></enumeration>
+			<enumeration value="Domain"></enumeration>
+			<enumeration value="InputDir"></enumeration>
+			<enumeration value="OutputDir"></enumeration>
+			<enumeration value="LogDir"></enumeration>
+			<enumeration value="LogSizeWrap"></enumeration>
+			<enumeration value="MultipartBoundary"></enumeration>
+			<enumeration value="SMTPAddressFile"></enumeration>
+			<enumeration value="SMTPPartsSeparator"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="dateMaskType">
+		<restriction base="string">
+			<enumeration value="DWK, DD MMM YYYY HH:MI:SS TZHH"></enumeration>
+			<enumeration value="DWK MMM DD HH:MI:SS YYYY"></enumeration>
+			<enumeration value="YYYYMMDDHHMI"></enumeration>
+			<enumeration value="YYYYMMDDHHMISS"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="valueModifierType">
+		<restriction base="string">
+			<enumeration value="base64"></enumeration>
+			<enumeration value="commonNameOnly"></enumeration>
+			<enumeration value="smtpLookup"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="conditionType">
+		<restriction base="string">
+			<enumeration value="TextPart"></enumeration>
+			<enumeration value="AttachmentPart"></enumeration>
+			<!-- RecipientTo, RecipientCc, RecipientBcc, Sender are only for PST conversion -->
+			<enumeration value="RecipientTo"></enumeration>
+			<enumeration value="RecipientCc"></enumeration>
+			<enumeration value="RecipientBcc"></enumeration>
+			<enumeration value="Sender"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="folderTypes">
+		<union>
+			<!-- For English language -->
+			<simpleType>
+				<restriction base="string">
+					<pattern
+						value="(Inbox)?(,)?(Drafts)?(,)?(Sent)?(,)?(Junk Mail)?(,)?(Trash)?((((,)(Folders(/[ _\-#a-zA-Z0-9]*)))*)|((,)?(PrivateFolders)?(,)?(SharedFolders)?))">
+					</pattern>
+				</restriction>
+			</simpleType>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="All"></enumeration>
+				</restriction>
+			</simpleType>
+			<!-- For French language -->
+			<simpleType>
+				<restriction base="string">
+					<pattern value="TBD Folders Names"></pattern>
+				</restriction>
+			</simpleType>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="TBD All"></enumeration>
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+
+	<simpleType name="pstMaskItemType">
+		<restriction base="string">
+			<enumeration value="LastName"></enumeration>
+			<enumeration value="MiddleName"></enumeration>
+			<enumeration value="FirstName"></enumeration>
+			<enumeration value="Server"></enumeration>
+			<enumeration value="Domain"></enumeration>
+			<enumeration value="YearAsYYYY"></enumeration>
+			<enumeration value="MonthAsMM"></enumeration>
+			<enumeration value="DayAsDD"></enumeration>
+			<enumeration value="SeparatorUnderline"></enumeration>
+			<enumeration value="SeparatorMinus"></enumeration>
+			<enumeration value="SeparatorSpace"></enumeration>
+			<enumeration value="PurchaseOrderOrJobNumber"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<complexType name="pstMaskType">
+		<sequence>
+			<element name="pstMaskItem" minOccurs="1"
+				maxOccurs="unbounded">
+				<complexType>
+					<attribute name="name" type="tns:pstMaskItemType"
+						use="required">
+					</attribute>
+					<attribute name="value" type="string"
+						use="optional">
+					</attribute>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="conversionRuleType">
+		<sequence>
+			<element name="conversion" maxOccurs="unbounded">
+				<complexType>
+					<attribute name="input" type="string"></attribute>
+					<attribute name="output" type="string"></attribute>
+				</complexType>
+			</element>
+			<element name="default">
+				<complexType>
+					<attribute name="output" type="string"></attribute>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="mailboxType">
+		<sequence>
+			<element name="folders" maxOccurs="1">
+				<complexType>
+					<sequence>
+						<element name="conversionRule"
+							type="tns:conversionRuleType" minOccurs="0" maxOccurs="1">
+						</element>
+					</sequence>
+					<attribute name="value" type="string"
+						use="required">
+					</attribute>
+					<attribute name="ignore" type="string"
+						use="optional">
+					</attribute>
+					<!--
+					<attribute name="value" type="tns:folderTypes"
+						use="required">
+					</attribute>
+					-->
+					<attribute name="language" type="IDREF"
+						use="required">
+					</attribute>
+					<attribute name="views" type="string"
+						use="optional">
+					</attribute>
+				</complexType>
+			</element>
+			<element name="message" minOccurs="1" maxOccurs="1"
+				type="tns:messageType">
+			</element>
+		</sequence>
+		<attribute name="messageForms" type="string"
+			use="optional">
+		</attribute>
+		<attribute name="skipMessageForms" type="string"
+			use="optional">
+		</attribute>
+		<attribute name="dateFilterField" type="string"
+			use="optional">
+		</attribute>
+		<attribute name="dateFilterAfter" type="string"
+			use="optional">
+		</attribute>
+		<attribute name="dateFilterBefore" type="string"
+			use="optional">
+		</attribute>
+		<attribute name="dateMask" type="tns:dateMaskType"
+			use="optional">
+		</attribute>
+	</complexType>
+
+	<complexType name="messageType">
+		<sequence>
+			<element name="messageItem" minOccurs="1"
+				maxOccurs="unbounded">
+				<complexType>
+					<sequence>
+						<element name="lotusDocField" minOccurs="0"
+							maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element name="conversionRule"
+										type="tns:conversionRuleType" minOccurs="0" maxOccurs="1">
+									</element>
+								</sequence>
+								<attributeGroup
+									ref="tns:lotusDocFieldType">
+								</attributeGroup>
+							</complexType>
+						</element>
+						<element name="configSetting" minOccurs="0"
+							maxOccurs="unbounded">
+							<complexType>
+								<attributeGroup
+									ref="tns:lotusDocFieldType">
+								</attributeGroup>
+							</complexType>
+						</element>
+					</sequence>
+					<attribute name="name" type="string"
+						use="required">
+					</attribute>
+					<attribute name="value" type="string"
+						use="required">
+					</attribute>
+					<attribute name="condition" type="tns:conditionType"
+						use="optional">
+					</attribute>
+					<attribute name="numeric" type="boolean" use="optional">
+					</attribute>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<attributeGroup name="lotusDocFieldType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="placeholder" type="string" use="required"></attribute>
+		<attribute name="resolveDocField" type="string"
+			use="optional">
+		</attribute>
+		<attribute name="resolveDocForm" type="string" use="optional"></attribute>
+		<attribute name="resolveDocLookupField" type="string"
+			use="optional">
+		</attribute>
+		<attribute name="multivalue" type="boolean" use="optional"
+			default="false">
+		</attribute>
+		<attribute name="multivalueSeparator" type="string"
+			use="optional" default=";">
+		</attribute>
+		<attribute name="onlyFirstValue" type="boolean" use="optional"
+			default="true">
+		</attribute>
+		<attribute name="orgHierarchy" type="boolean" use="optional"
+			default="false">
+		</attribute>
+		<attribute name="dateMask" type="tns:dateMaskType"
+			use="optional">
+		</attribute>
+		<attribute name="valueModifier" type="tns:valueModifierType"
+			use="optional">
+		</attribute>
+		<attribute name="valueModifierParameters" type="string"
+			use="optional">
+		</attribute>
+	</attributeGroup>
+
+	<complexType name="mailMoverType">
+		<sequence>
+			<element name="configEntry" minOccurs="0"
+				maxOccurs="unbounded">
+				<complexType>
+					<attribute name="setting" type="tns:settingType"></attribute>
+					<attribute name="value" type="string"
+						use="required">
+					</attribute>
+				</complexType>
+			</element>
+			<element name="pstMask" minOccurs="0" maxOccurs="1"
+				type="tns:pstMaskType">
+			</element>
+			<element name="mailbox" minOccurs="1" maxOccurs="1"
+				type="tns:mailboxType">
+			</element>
+		</sequence>
+		<attribute name="source" type="tns:sourceType" use="required"></attribute>
+		<attribute name="target" type="tns:targetType" use="required"></attribute>
+		<attribute name="language" type="tns:languageType"
+			use="required">
+		</attribute>
+	</complexType>
+	<element name="mailMover" type="tns:mailMoverType"></element>
+</schema>

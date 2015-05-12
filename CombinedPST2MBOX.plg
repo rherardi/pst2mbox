@@ -1,0 +1,32 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: CombinedPST2MBOX - Win32 Unicode Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "D:\TEMP\RSP73.tmp" with contents
+[
+/nologo /Zp1 /ML /W3 /GX /O2 /I "C:\xerces-c-windows_2000-msvc_60\include" /I "C:\Xalan-C_1_10_0-win32-msvc_60\include" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_UNICODE" /D "UNICODE" /D "W32" /D "JESCOMMON_EXPORTS" /D "NMAILXML_EXPORTS" /Fp"Unicode Release/CombinedPST2MBOX.pch" /YX /Fo"Unicode Release/" /Fd"Unicode Release/" /FD /c 
+"I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp"
+]
+Creating command line "cl.exe @D:\TEMP\RSP73.tmp" 
+<h3>Output Window</h3>
+Compiling...
+PSTProc.cpp
+I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp(320) : warning C4102: 'cleanup' : unreferenced label
+I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp(347) : warning C4101: 'hr' : unreferenced local variable
+I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp(438) : warning C4101: 'hr' : unreferenced local variable
+I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp(470) : warning C4101: 'field_text' : unreferenced local variable
+I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp(471) : warning C4101: 'field_textUTF8' : unreferenced local variable
+I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp(472) : warning C4101: 'field_textW' : unreferenced local variable
+I:\UAB\Projects\GSS\CombinedPST2MBOX\PSTProc.cpp(1350) : warning C4102: 'cleanup' : unreferenced label
+
+
+
+<h3>Results</h3>
+PSTProc.obj - 0 error(s), 7 warning(s)
+</pre>
+</body>
+</html>
